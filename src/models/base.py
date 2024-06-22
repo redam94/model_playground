@@ -22,11 +22,21 @@ class BaseModel(abc.ABC):
   
   def save(self, filename: str = None):
     """Save the model to a file"""
-    if filename is None:
-      filename = f"{self.name}_{datetime.now().isoformat()}_{uuid4()}.model"
     
-    with open(filename, "w") as f:
-      f.write(self.serialize())
+    import io
+    import json
+    from zipfile import ZipFile
+    if filename is None:
+      filename = io.BytesIO()
+      
+    serialized_model, artifact = self.serialize()
+    with ZipFile(filename, 'w') as file:
+      file.writestr('model.json', json.dumps(serialized_model))
+      file.writestr(artifact['path'], artifact['data'].getvalue())
+    
+    return filename
+    
+
   
   @abc.abstractmethod
   def load(self, serialized_model: dict):
