@@ -95,13 +95,7 @@ class OLS(SupervisedModel):
   
 
 class OLSVisualizer(SupervisedModelVisualizer):
-  """upload_data: Upload the data
-process_data: Process the data
-visualize_data: Visualize the data
-transform_data: Transform the data
-select_model_data: Select the data for the model
-fit_model: Fit the model
-output_step: Visualize the output step"""
+  """Visualizer for the OLS model"""
   def __init__(self):
     super().__init__(OLS)
    
