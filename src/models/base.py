@@ -43,4 +43,22 @@ class BaseModel(abc.ABC):
     """Load the model from serialized data"""
     pass
   
+
+class BaseModelVisualizer(abc.ABC):
+  """Base Model Visualizer class for all model visualizers to inherit from"""
+  
+  @abc.abstractmethod
+  def data_loading_step(self):
+    """Visualize the data loading process"""
+    pass
+  
+  @abc.abstractmethod
+  def inference_step(self):
+    """Visualize the inference step"""
+    pass
+  
+  @abc.abstractmethod
+  def output_step(self):
+    """Visualize the output step"""
+    pass
   
