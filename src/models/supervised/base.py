@@ -12,16 +12,6 @@ class SupervisedModel(BaseModel):
     self._ivs = None # Independent variables
     self._dvs = None # Dependent variables
     self._is_fitted = False # Whether the model is fitted
-    
-  @abc.abstractmethod
-  def fit(self, X, y, *args, **kwargs):
-    """Train the model"""
-    pass
-  
-  @abc.abstractmethod
-  def predict(self, X):
-    """Predict the target variable"""
-    pass
   
   @abc.abstractmethod
   def evaluate(self, X, y):
@@ -66,29 +56,29 @@ class SupervisedModelVisualizer(BaseModelVisualizer):
     self.transformed_data = None
     self.model_data = None
   
-  def upload_data(self):
+  def upload_data(self) -> None:
     with st.expander("Upload Data"):
       file = st.file_uploader("Upload a your data file")
       if file is not None:
         self.file_data = file.getvalue()
   
   @abc.abstractmethod
-  def process_data(self):
+  def process_data(self) -> None:
     """Process the data"""
     pass
   
   @abc.abstractmethod
-  def visualize_data(self):
+  def visualize_data(self) -> None:
     """Visualize the data"""
     pass
   
   @abc.abstractmethod
-  def transform_data(self):
+  def transform_data(self) -> None:
     """Transform the data"""
     pass
   
   @abc.abstractmethod
-  def select_model_data(self):
+  def select_model_data(self) -> None:
     """Select the data for the model"""
     pass
   
@@ -112,11 +102,11 @@ class SupervisedModelVisualizer(BaseModelVisualizer):
     self.visualize_data()
   
   @abc.abstractmethod
-  def fit_model(self):
+  def fit_model(self) -> None:
     """Fit the model"""
     pass
 
-  def inference_step(self):
+  def inference_step(self) -> None:
     """Visualize the inference step"""
     self.select_model_data()
     if self.model_data is None:
@@ -124,12 +114,14 @@ class SupervisedModelVisualizer(BaseModelVisualizer):
       
     self.fit_model()
     
-    if self.model._is_fitted:
-      st.success("Model fitted successfully")
     if not self.model._is_fitted:
       st.stop()
+    
+    st.success("Model fitted successfully")
+      
+ 
   
   @abc.abstractmethod
-  def output_step(self):
+  def output_step(self) -> None:
     """Visualize the output step"""
     pass

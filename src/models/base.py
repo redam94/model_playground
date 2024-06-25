@@ -16,6 +16,16 @@ class BaseModel(abc.ABC):
   description: str
   
   @abc.abstractmethod
+  def fit(self, *args, **kwargs):
+    """Train the model"""
+    pass
+  
+  @abc.abstractmethod
+  def predict(self, *args, **kwargs):
+    """Predict the target variable"""
+    pass
+  
+  @abc.abstractmethod
   def serialize(self):
     """Serialize the model to a dictionary"""
     pass

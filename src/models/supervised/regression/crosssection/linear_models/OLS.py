@@ -2,7 +2,7 @@
 
 from src.models.supervised.base import SupervisedModel, SupervisedModelVisualizer
 from src.models.base import ModelNotFittedError
-from src.components.data_helpers.data_loader import dtype_selector, apply_dtypes
+from src.models.utils.data_helpers.data_loader import dtype_selector, apply_dtypes
 
 import io
 from datetime import datetime
@@ -107,10 +107,13 @@ class OLSVisualizer(SupervisedModelVisualizer):
     except Exception as e:
       st.error(f"Error loading file: {e}")
       return
+    
     with st.expander("Data Processing Options"):
+      
       with st.form(key='data_processing'):
         dtype_options, index_options = st.tabs(["Data Types", "Index"])
         options = list(df.columns)+["None"]
+        
         with index_options:
           index = st.selectbox("Select the index variable", options=options, index=len(options)-1, key='index')
         
@@ -126,7 +129,7 @@ class OLSVisualizer(SupervisedModelVisualizer):
     
     self.processed_data = processed_df
 
-  def visualize_data(self):
+  def visualize_data(self)->None:
     with st.expander("Data Summary"):
       data_head, data_summary, histogram, relationship = st.tabs(
         ["Data Preview", "Data Summary", "Histogram", "2-Way Relationship"]
@@ -142,6 +145,7 @@ class OLSVisualizer(SupervisedModelVisualizer):
         with st.form(key="value_deep_dive"):
           col = st.selectbox("Select a column", options=self.processed_data.columns)
           st.form_submit_button(label="Explore Variable")
+        
         fig, ax = plt.subplots(figsize=(5, 3))
         try:
           self.processed_data[col].plot.hist(ax=ax)
@@ -149,13 +153,16 @@ class OLSVisualizer(SupervisedModelVisualizer):
           ax.set_xlabel(col)
         except TypeError:
           st.error("Cannot plot histogram")
+        
         st.pyplot(fig)
         
       with relationship:
+        
         with st.form(key="relationship"):
           y_var = st.selectbox("Select the dependent variable", options=self.processed_data.columns)
           x_var = st.selectbox("Select the independent variable", options=self.processed_data.columns, index=1)
           st.form_submit_button(label="Plot Relationship")
+        
         fig, ax = plt.subplots(figsize=(16, 9))
         plt.scatter(self.processed_data[x_var], self.processed_data[y_var])
         ax.set_title(f"{y_var} vs {x_var}")
